@@ -17,7 +17,7 @@ var ClassProxy;
                 if (typeof target[property] !== "function")
                     return target[property];
                 return function () {
-                    (_a = this._sn_inherit)[property].apply(_a, Array.from(arguments));
+                    return (_a = this._sn_inherit)[property].apply(_a, Array.from(arguments));
                     var _a;
                 };
             }

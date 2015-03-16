@@ -5,11 +5,52 @@
     <script src="classproxy.js"></script>
     <script>
       var proxied = ClassProxy.create(Promise);
-      new proxied((resolve, reject) => resolve())
-        .then(() => console.log("'proxied' class is successfully created and working."));
-      class subclass extends proxied {}
-      new subclass((resolve, reject) => resolve())
-        .then(() => console.log("'subclass' class is successfully created and working."));
+      new proxied(function (resolve, reject) { resolve() })
+        .then(function () { console.log("'proxied' class is successfully created and working.") });
+      
+      // TypeScript ES5 emit for subclassing
+      var __extends = this.__extends || function (d, b) {
+        for (var p in b) if (b.hasOwnProperty(p)) d[p] = b[p];
+        function __() { this.constructor = d; }
+        __.prototype = b.prototype;
+        d.prototype = new __();
+      };
+      var subclass = (function (_super) {
+        __extends(subclass, _super);
+        function subclass() {
+          _super.apply(this, arguments);
+        }
+        subclass.prototype.subclassed = function () {
+          return true;
+        };
+        return subclass;
+      })(proxied);
+
+
+
+      new subclass(function (resolve, reject) { resolve() })
+        .then(function () { console.log("'subclass' class is successfully created and working.") });
+        
+      function timeout(time) {
+        return new subclass(function (resolve, reject) { setTimeout(function () { resolve() }, time) });
+      }
+      timeout(1000)
+        .then(function () { console.log("'subclass' class works as expected with setTimeout.") })
+        .then(function () {
+          console.log("Promise chaining test first check:" + performance.now())
+          return timeout(2000);
+        })
+        .then(function () {
+          console.log("Promise chaining test second check (should +2000):" + performance.now())
+          return timeout(2000);
+        })
+        .then(function () {
+          console.log("Promise chaining test third check (should +2000):" + performance.now())
+          return Promise.resolve()
+        })
+        .then(function () {
+          console.log("Interaction test passed with original built-in class.")
+        });
     </script>
   </head>
   <body>

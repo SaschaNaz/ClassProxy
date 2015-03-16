@@ -17,7 +17,7 @@ module ClassProxy {
           if (typeof target[property] !== "function")
             return target[property];
           return function () {
-            this._sn_inherit[property](...Array.from(arguments))
+            return this._sn_inherit[property](...Array.from(arguments))
           }
         }
       });
