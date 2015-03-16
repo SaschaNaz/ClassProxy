@@ -3,6 +3,14 @@
   <head>
     <meta charset="utf-8" />
     <script src="classproxy.js"></script>
+    <script>
+      var proxied = ClassProxy.create(Promise);
+      new proxied((resolve, reject) => resolve())
+        .then(() => console.log("'proxied' class is successfully created and working."));
+      class subclass extends proxied {}
+      new subclass((resolve, reject) => resolve())
+        .then(() => console.log("'subclass' class is successfully created and working."));
+    </script>
   </head>
   <body>
   </body>
