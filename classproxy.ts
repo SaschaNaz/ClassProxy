@@ -5,7 +5,7 @@ module ClassProxy {
         get(target: any, property: string) {
           if (property === "__proto__")
             return newChildProto;
-          return target[property];
+          return newChildProto[property];
         }
       });
   }
@@ -46,21 +46,6 @@ module ClassProxy {
     }
     return child;
   }
-  //function insertProtoProxy(instance: any, prototype: any) {
-  //  let parent = findProto(instance, prototype);
-  //  parent.__proto__ = new Proxy(
-  //    prototype,
-  //    {
-  //      get(target: any, property: string) {
-  //        if (typeof target[property] !== "function")
-  //          return (this._sn_inherit || target)[property];
-  //        return function () {
-  //          return (this._sn_inherit || target)[property](...Array.from(arguments))
-  //        }
-  //      }
-  //    });
-  //  return instance;
-  //}
   export function create<T extends Function>(classobject: T) {
     let internalInstanceName = "_sn_inherit_" + btoa(`${Math.random()}`);
     let constructor = <T><Function>function () {
@@ -90,6 +75,5 @@ module ClassProxy {
           return target.apply(thisArg, arguments);
         }
       });
-    // TODO: Allow `class subclass extends ClassProxy.create(Array) {} new subclass(1,2,3).length`
   }
 }

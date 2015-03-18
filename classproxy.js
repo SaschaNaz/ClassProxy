@@ -5,7 +5,9 @@ var ClassProxy;
             get: function (target, property) {
                 if (property === "__proto__")
                     return newChildProto;
-                return target[property];
+                return newChildProto[property];
+                // ISSUE: This ignores __proto__ as its real __proto__ property is unchanged
+                // Let's see https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/Object/create
             }
         });
     }
