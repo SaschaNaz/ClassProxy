@@ -1,4 +1,4 @@
-<!DOCTYPE html>
+﻿<!DOCTYPE html>
 <html>
   <head>
     <meta charset="utf-8" />
@@ -50,7 +50,29 @@
         })
         .then(function () {
           console.log("Interaction test passed with original built-in class.")
-        });
+        })
+        .then(function () {
+          var scArray = ClassProxy.create(Array);
+          var sc = new scArray(1,2,3);
+          console.log("Getter test: " + (sc.length === 3 ? "succeeded" : "failed"));
+          
+          scArray.prototype.wow = function () { return "wow" };
+          console.log("Setter test: " + (sc.wow ? "succeeded" : "failed"));
+          console.log("Function setter test: " + ((function () {
+            try { return sc.wow() } catch (e) { return null }
+          })() === "wow" ? "succeeded" : "failed"));
+
+          var sub = new subclass((resolve) => resolve());
+          console.log("Subclass member test: " + (sub.subclassed ? "succeeded" : "failed"));
+          console.log("Subclass method test: " + ((sub.subclassed() === true) ? "succeeded" : "failed"));
+        })
+        .then(function () {
+          
+        })
+        .catch(function (e) {
+          debugger;
+          console.error("Test failed. " + (e.message || e))
+        })
     </script>
   </head>
   <body>

@@ -6,20 +6,28 @@ var ClassProxy;
                 if (property === "__proto__")
                     return newChildProto;
                 return newChildProto[property];
-                // ISSUE: This ignores __proto__ as its real __proto__ property is unchanged
-                // Let's see https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/Object/create
             }
         });
     }
     function retargetProto(proto, instance, internalInstanceName) {
         return new Proxy(proto, {
             get: function (target, property) {
+                var retargeted = instance[internalInstanceName] || instance;
+                // non-function property
                 if (typeof target[property] !== "function")
                     return (instance[internalInstanceName] || instance)[property];
-                return function () {
-                    return (_a = (instance[internalInstanceName] || instance))[property].apply(_a, Array.from(arguments));
-                    var _a;
-                };
+                // function property
+                if (property in retargeted)
+                    return function () {
+                        return retargeted[property].apply(retargeted, Array.from(arguments));
+                    };
+                else
+                    return target[property]; // for when the proxy directly got some functions as a prototype
+            },
+            set: function (target, property, value, receiver) {
+                var retargeted = instance[internalInstanceName] || instance;
+                retargeted[property] = value;
+                return retargeted[property] === value;
             }
         });
     }
@@ -47,21 +55,6 @@ var ClassProxy;
         }
         return child;
     }
-    //function insertProtoProxy(instance: any, prototype: any) {
-    //  let parent = findProto(instance, prototype);
-    //  parent.__proto__ = new Proxy(
-    //    prototype,
-    //    {
-    //      get(target: any, property: string) {
-    //        if (typeof target[property] !== "function")
-    //          return (this._sn_inherit || target)[property];
-    //        return function () {
-    //          return (this._sn_inherit || target)[property](...Array.from(arguments))
-    //        }
-    //      }
-    //    });
-    //  return instance;
-    //}
     function create(classobject) {
         var internalInstanceName = "_sn_inherit_" + btoa("" + Math.random());
         var constructor = function () {
@@ -91,7 +84,6 @@ var ClassProxy;
                 return target.apply(thisArg, arguments);
             }
         });
-        // TODO: Allow `class subclass extends ClassProxy.create(Array) {} new subclass(1,2,3).length`
     }
     ClassProxy.create = create;
 })(ClassProxy || (ClassProxy = {}));

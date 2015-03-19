@@ -13,11 +13,22 @@ module ClassProxy {
     return new Proxy(
       proto, {
         get(target: any, property: string) {
+          let retargeted = instance[internalInstanceName] || instance;
+
+          // non-function property
           if (typeof target[property] !== "function")
             return (instance[internalInstanceName] || instance)[property];
-          return function () {
-            return (instance[internalInstanceName] || instance)[property](...Array.from(arguments))
-          }
+
+          // function property
+          if (property in retargeted)
+            return function () { return retargeted[property](...Array.from(arguments)) };
+          else
+            return target[property]; // for when the proxy directly got some functions as a prototype
+        },
+        set(target: any, property: string, value: any, receiver: any) {
+          let retargeted = instance[internalInstanceName] || instance;
+          retargeted[property] = value;
+          return retargeted[property] === value;
         }
       });
   }
