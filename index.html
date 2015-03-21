@@ -63,7 +63,7 @@
           })() === "wow" ? "succeeded" : "failed"));
 
           var sub = new subclass((resolve) => resolve());
-          console.log("Subclass member test: " + (sub.subclassed ? "succeeded" : "failed"));
+          console.log("Subclass property test: " + (sub.subclassed ? "succeeded" : "failed"));
           console.log("Subclass method test: " + ((sub.subclassed() === true) ? "succeeded" : "failed"));
         })
         .then(function () {

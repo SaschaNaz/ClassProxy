@@ -1,13 +1,17 @@
 var ClassProxy;
 (function (ClassProxy) {
     function proxifyParentProto(proto, newChildProto) {
-        return new Proxy(proto, {
-            get: function (target, property) {
+        var proxied = new Proxy(proto, {
+            get: function (target, property, receiver) {
                 if (property === "__proto__")
                     return newChildProto;
-                return newChildProto[property];
+                if (target.hasOwnProperty(property))
+                    return target[property];
+                else
+                    return newChildProto[property];
             }
         });
+        return proxied;
     }
     function retargetProto(proto, instance, internalInstanceName) {
         return new Proxy(proto, {

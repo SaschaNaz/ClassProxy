@@ -1,13 +1,18 @@
 module ClassProxy {
   function proxifyParentProto(proto: any, newChildProto: any) {
-    return new Proxy(
+    let proxied = new Proxy(
       proto, {
-        get(target: any, property: string) {
+        get(target: any, property: string, receiver: any) {          
           if (property === "__proto__")
             return newChildProto;
-          return newChildProto[property];
+
+          if (target.hasOwnProperty(property)) // subclasses may have their own properties and methods
+            return target[property];
+          else
+            return newChildProto[property];
         }
       });
+    return proxied;
   }
   function retargetProto(proto: any, instance: any, internalInstanceName: string) {
     return new Proxy(
