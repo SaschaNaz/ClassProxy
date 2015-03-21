@@ -17,14 +17,14 @@ var ClassProxy;
         return new Proxy(proto, {
             get: function (target, property) {
                 var retargeted = instance[internalInstanceName] || instance;
-                // non-function property
-                if (typeof target[property] !== "function")
-                    return (instance[internalInstanceName] || instance)[property];
-                // function property
-                if (property in retargeted)
-                    return function () {
-                        return retargeted[property].apply(retargeted, Array.from(arguments));
-                    };
+                if (property in retargeted) {
+                    if (typeof target[property] !== "function")
+                        return (instance[internalInstanceName] || instance)[property];
+                    else
+                        return function () {
+                            return retargeted[property].apply(retargeted, Array.from(arguments));
+                        };
+                }
                 else
                     return target[property]; // for when the proxy directly got some functions as a prototype
             },
