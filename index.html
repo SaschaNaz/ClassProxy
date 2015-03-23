@@ -65,6 +65,8 @@
           var sub = new subclass((resolve) => resolve());
           console.log("Subclass property test: " + (sub.subclassed ? "succeeded" : "failed"));
           console.log("Subclass method test: " + ((sub.subclassed() === true) ? "succeeded" : "failed"));
+          console.log("Subclass __proto__ access test: " + ((sub.__proto__.subclassed) ? "succeeded" : "failed"));
+          console.log("Subclass instanceof test: " + ((sub instanceof subclass) ? "succeeded" : "failed"));
         })
         .then(function () {
           

@@ -19,7 +19,7 @@ var ClassProxy;
                 var retargeted = instance[internalInstanceName] || instance;
                 if (property in retargeted) {
                     if (typeof target[property] !== "function")
-                        return (instance[internalInstanceName] || instance)[property];
+                        return retargeted[property];
                     else
                         return function () {
                             return retargeted[property].apply(retargeted, Array.from(arguments));

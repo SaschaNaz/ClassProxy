@@ -2,7 +2,7 @@ module ClassProxy {
   function proxifyParentProto(proto: any, newChildProto: any) {
     let proxied = new Proxy(
       proto, {
-        get(target: any, property: string, receiver: any) {          
+        get(target: any, property: string, receiver: any) {
           if (property === "__proto__")
             return newChildProto;
 
@@ -22,7 +22,7 @@ module ClassProxy {
           
           if (property in retargeted) {
             if (typeof target[property] !== "function") // non-function property
-              return (instance[internalInstanceName] || instance)[property];
+              return retargeted[property];
             else // function property
               return function () { return retargeted[property](...Array.from(arguments)) };
           }
