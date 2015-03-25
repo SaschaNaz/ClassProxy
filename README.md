@@ -20,5 +20,7 @@ declare module SubclassJ {
 ### Example
 
 ```javascript
-class Subclass extends Promise { constructor() { return SubclassJ.getNewThis(Subclass, Promise, arguments) } }
+class Subclass extends Promise { 
+  constructor() { return SubclassJ.getNewThis(Subclass, Promise, arguments) }
+}
 ```
