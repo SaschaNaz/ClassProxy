@@ -13,7 +13,7 @@ This is how to subclass ES6 Promise, but this probably won't work on your brower
 ```typescript
 declare module SubclassJ {
     let required: boolean;
-    function getNewThis(thisArg: any, extending: any, arguments: any[]): any;
+    function getNewThis(thisArg: any, extending: any, arguments: IArguments): any;
 }
 ```
 
