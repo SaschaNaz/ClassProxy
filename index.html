@@ -80,7 +80,7 @@
             try { return last.wow() } catch (e) { return null }
           })() === "wow" ? "succeeded" : "failed"));
 
-          var sub = new subclass((resolve) => resolve());
+          var sub = new subclass(function (resolve) { resolve() });
           console.log("Subclass property test: " + (sub.subclassed ? "succeeded" : "failed"));
           console.log("Subclass method test: " + ((sub.subclassed() === true) ? "succeeded" : "failed"));
           console.log("Subclass __proto__ access test: " + ((sub.__proto__.subclassed) ? "succeeded" : "failed"));
