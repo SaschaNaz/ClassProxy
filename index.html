@@ -2,30 +2,49 @@
 <html>
   <head>
     <meta charset="utf-8" />
-    <script src="classproxy.js"></script>
+    <script src="subclassj.js"></script>
     <script>
-      var proxied = ClassProxy.create(Promise);
-      new proxied(function (resolve, reject) { resolve() })
-        .then(function () { console.log("'proxied' class is successfully created and working.") });
       
-      // TypeScript ES5 emit for subclassing
+      // TypeScript ES5 emit for classes
       var __extends = this.__extends || function (d, b) {
         for (var p in b) if (b.hasOwnProperty(p)) d[p] = b[p];
         function __() { this.constructor = d; }
         __.prototype = b.prototype;
         d.prototype = new __();
       };
+      
       var subclass = (function (_super) {
         __extends(subclass, _super);
         function subclass() {
-          _super.apply(this, arguments);
+          return SubclassJ.getNewThis(subclass, _super, Array.prototype.map.call(arguments, function (v) { return v }));
         }
         subclass.prototype.subclassed = function () {
           return true;
         };
         return subclass;
-      })(proxied);
+      })(Promise);
 
+      var LastArray = (function (_super) {
+        __extends(LastArray, _super);
+        function LastArray() {
+          return SubclassJ.getNewThis(LastArray, _super, Array.prototype.map.call(arguments, function (v) { return v }));
+        }
+        LastArray.prototype.last = function () {
+          return this[this.length - 1];
+        };
+        return LastArray;
+      })(Array);
+
+      var FirstArray = (function (_super) {
+        __extends(FirstArray, _super);
+        function FirstArray() {
+          return SubclassJ.getNewThis(FirstArray, _super, Array.prototype.map.call(arguments, function (v) { return v }));
+        }
+        FirstArray.prototype.first = function () {
+          return this[0];
+        };
+        return FirstArray;
+      })(LastArray);
 
 
       new subclass(function (resolve, reject) { resolve() })
@@ -52,14 +71,13 @@
           console.log("Interaction test passed with original built-in class.")
         })
         .then(function () {
-          var scArray = ClassProxy.create(Array);
-          var sc = new scArray(1,2,3);
-          console.log("Getter test: " + (sc.length === 3 ? "succeeded" : "failed"));
+          var last = new LastArray(1,2,3);
+          console.log("Getter test: " + (last.length === 3 ? "succeeded" : "failed"));
           
-          scArray.prototype.wow = function () { return "wow" };
-          console.log("Setter test: " + (sc.wow ? "succeeded" : "failed"));
+          LastArray.prototype.wow = function () { return "wow" };
+          console.log("Setter test: " + (last.wow ? "succeeded" : "failed"));
           console.log("Function setter test: " + ((function () {
-            try { return sc.wow() } catch (e) { return null }
+            try { return last.wow() } catch (e) { return null }
           })() === "wow" ? "succeeded" : "failed"));
 
           var sub = new subclass((resolve) => resolve());
@@ -69,7 +87,9 @@
           console.log("Subclass instanceof test: " + ((sub instanceof subclass) ? "succeeded" : "failed"));
         })
         .then(function () {
-          
+          var first = new FirstArray(1,2,3);
+          console.log("Subclass of subclass member test: " + (first.last() === 3 ? "succeeded" : "failed"));
+          console.log("Subclass of subclass member test: " + (first.first() === 1 ? "succeeded" : "failed"));
         })
         .catch(function (e) {
           debugger;
