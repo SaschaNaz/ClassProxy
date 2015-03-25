@@ -13,9 +13,9 @@ var SubclassJ;
         }
         return SnTemp;
     })(Array);
-    SubclassJ.required = function () {
+    SubclassJ.required = (function () {
         return new SnTemp(1).length === 1;
-    };
+    })();
     function getNewThis(thisArg, extending, arguments) {
         var newThis = new (extending.bind.apply(extending, [null].concat(arguments)));
         Object.setPrototypeOf(newThis, thisArg.prototype);
