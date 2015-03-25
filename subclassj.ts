@@ -1,11 +1,14 @@
 module SubclassJ {
-  declare class Array { }
-  class SnTemp extends Array { }
+  module _Temp {
+    declare class Array { }
+    export class SnTemp extends Array { }
+  }
+  _Temp.SnTemp = Array;
   
-  export let required = (() => new (<any>SnTemp)(1).length === 1)();
+  export let required = (() => new (<any>_Temp.SnTemp)(1).length === 1)();
 
-  export function getNewThis(thisArg: any, extending: any, arguments: any[]) {
-    let newThis = new (extending.bind(null, ...arguments));
+  export function getNewThis(thisArg: any, extending: any, arguments: IArguments) {
+    let newThis = new (extending.bind(null, ...Array.prototype.map.call(arguments, (v: any) => v)));
 
     Object.setPrototypeOf(newThis, thisArg.prototype);
     return newThis;

@@ -6,18 +6,25 @@ var __extends = this.__extends || function (d, b) {
 };
 var SubclassJ;
 (function (SubclassJ) {
-    var SnTemp = (function (_super) {
-        __extends(SnTemp, _super);
-        function SnTemp() {
-            _super.apply(this, arguments);
-        }
-        return SnTemp;
-    })(Array);
+    var _Temp;
+    (function (_Temp) {
+        var SnTemp = (function (_super) {
+            __extends(SnTemp, _super);
+            function SnTemp() {
+                _super.apply(this, arguments);
+            }
+            return SnTemp;
+        })(Array);
+        _Temp.SnTemp = SnTemp;
+    })(_Temp || (_Temp = {}));
+    _Temp.SnTemp = Array;
     SubclassJ.required = (function () {
-        return new SnTemp(1).length === 1;
+        return new _Temp.SnTemp(1).length === 1;
     })();
     function getNewThis(thisArg, extending, arguments) {
-        var newThis = new (extending.bind.apply(extending, [null].concat(arguments)));
+        var newThis = new (extending.bind.apply(extending, [null].concat(Array.prototype.map.call(arguments, function (v) {
+            return v;
+        }))));
         Object.setPrototypeOf(newThis, thisArg.prototype);
         return newThis;
     }
