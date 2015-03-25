@@ -16,7 +16,7 @@
       var subclass = (function (_super) {
         __extends(subclass, _super);
         function subclass() {
-          return SubclassJ.getNewThis(subclass, _super, Array.prototype.map.call(arguments, function (v) { return v }));
+          return SubclassJ.getNewThis(subclass, _super, arguments);
         }
         subclass.prototype.subclassed = function () {
           return true;
@@ -27,7 +27,7 @@
       var LastArray = (function (_super) {
         __extends(LastArray, _super);
         function LastArray() {
-          return SubclassJ.getNewThis(LastArray, _super, Array.prototype.map.call(arguments, function (v) { return v }));
+          return SubclassJ.getNewThis(LastArray, _super, arguments);
         }
         LastArray.prototype.last = function () {
           return this[this.length - 1];
@@ -38,7 +38,7 @@
       var FirstArray = (function (_super) {
         __extends(FirstArray, _super);
         function FirstArray() {
-          return SubclassJ.getNewThis(FirstArray, _super, Array.prototype.map.call(arguments, function (v) { return v }));
+          return SubclassJ.getNewThis(FirstArray, _super, arguments);
         }
         FirstArray.prototype.first = function () {
           return this[0];
