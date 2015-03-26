@@ -22,9 +22,9 @@ var SubclassJ;
         return new _Temp.SnTemp(1).length === 1;
     })();
     function getNewThis(thisArg, extending, arguments) {
-        var newThis = new (extending.bind.apply(extending, [null].concat(Array.prototype.map.call(arguments, function (v) {
+        var newThis = new (extending.bind.apply(extending, [null].concat((Array.isArray(arguments) ? arguments : Array.prototype.map.call(arguments, function (v) {
             return v;
-        }))));
+        })))));
         Object.setPrototypeOf(newThis, thisArg.prototype);
         return newThis;
     }
