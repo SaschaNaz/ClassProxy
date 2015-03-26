@@ -6,11 +6,12 @@
     <script>
       
       // TypeScript ES5 emit for classes
-      var __extends = this.__extends || function (d, b) {
+      
+      // Modified for Win10 10041 EdgeHTML bug workaround
+      var __extends = function (d, b) {
         for (var p in b) if (b.hasOwnProperty(p)) d[p] = b[p];
-        function __() { this.constructor = d; }
-        __.prototype = b.prototype;
-        d.prototype = new __();
+        d.prototype = Object.create(b.prototype); 
+        d.__proto__ = b;
       };
       
       var subclass = (function (_super) {
@@ -27,7 +28,9 @@
       var LastArray = (function (_super) {
         __extends(LastArray, _super);
         function LastArray() {
-          return SubclassJ.getNewThis(LastArray, _super, arguments);
+          var newThis = SubclassJ.getNewThis(LastArray, _super, arguments);
+          newThis.type = "lastArray";
+          return newThis;
         }
         LastArray.prototype.last = function () {
           return this[this.length - 1];
@@ -89,7 +92,8 @@
         .then(function () {
           var first = new FirstArray(1,2,3);
           console.log("Subclass of subclass member test: " + (first.last() === 3 ? "succeeded" : "failed"));
-          console.log("Subclass of subclass member test: " + (first.first() === 1 ? "succeeded" : "failed"));
+          console.log("Subclass of subclass member test 2: " + (first.first() === 1 ? "succeeded" : "failed"));
+          console.log("Subclass of subclass member test 3: " + (first.type === "lastArray" ? "succeeded" : "failed"));
         })
         .catch(function (e) {
           debugger;
