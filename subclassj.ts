@@ -7,8 +7,8 @@ module SubclassJ {
   
   export let required = (() => new (<any>_Temp.SnTemp)(1).length === 1)();
 
-  export function getNewThis(thisArg: any, extending: any, arguments: IArguments | any[]) {
-    let newThis = new (extending.bind(null, ...(Array.isArray(arguments) ? arguments : Array.prototype.map.call(arguments, (v: any) => v))));
+  export function getNewThis<T extends Function>(thisArg: T, extending: any, arguments: IArguments | any[]) {
+    let newThis: T = new (extending.bind(null, ...(Array.isArray(arguments) ? arguments : Array.prototype.map.call(arguments, (v: any) => v))));
 
     Object.setPrototypeOf(newThis, thisArg.prototype);
     return newThis;
