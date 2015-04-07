@@ -14,3 +14,7 @@ module SubclassJ {
     return newThis;
   }
 }
+
+interface Window {
+  SubclassJ: typeof SubclassJ;
+}
